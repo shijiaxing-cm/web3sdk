@@ -19,6 +19,14 @@ public final class Numeric {
     private Numeric() {
     }
 
+    public static String encodeQuantity(BigInteger value) {
+        if (value.signum() != -1) {
+            return HEX_PREFIX + value.toString(16);
+        } else {
+            throw new MessageEncodingException("Negative values are not supported");
+        }
+    }
+
     public static BigInteger decodeQuantity(String value) {
         if (!isValidHexQuantity(value)) {
         	try {
@@ -35,16 +43,6 @@ public final class Numeric {
         }
     }
 
-    public static BigInteger decodeQuantity(String value) {
-        if (!isValidHexQuantity(value)) {
-            throw new MessageDecodingException("Value must be in format 0x[1-9]+[0-9]* or 0x0");
-        }
-        try {
-            return new BigInteger(value.substring(2), 16);
-        } catch (NumberFormatException e) {
-            throw new MessageDecodingException("Negative ", e);
-        }
-    }
 
     private static boolean isValidHexQuantity(String value) {
         if (value == null) {
